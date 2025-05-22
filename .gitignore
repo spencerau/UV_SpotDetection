@@ -84,3 +84,5 @@ TAGS
 
 # === CUSTOM ===
 models/
+src/temp/
+src/testing/

@@ -1,5 +1,5 @@
 
-function [ExG_Mask] = ExcessGreenMask(rgb_img)
+function [ExG_Mask] = ExcessGreenMask(rgb_img, top_percent_thresh)
 
     I = im2double(rgb_img);
     R = I(:,:,1);                  
@@ -7,7 +7,7 @@ function [ExG_Mask] = ExcessGreenMask(rgb_img)
     B = I(:,:,3);
     maskCircle = any(I>0,3);
     
-    % 1) compute Excess‑Green index
+    % compute Excess Green index
     ExG = 2*G - R - B;  
 
     mn = min(ExG(:));  
@@ -17,16 +17,9 @@ function [ExG_Mask] = ExcessGreenMask(rgb_img)
     % normalized equalition for Excess Green
     ExGn = (ExG - mn)/(mx - mn);
 
-    thresh = prctile(ExGn(maskCircle), 98.5);
-    % 
-    % adapt_thresh = adaptthresh(ExGn, 0.6, ...
-    %     'NeighborhoodSize',[41 41], ...
-    %     'Statistic', 'mean', ...
-    %     'ForegroundPolarity', 'bright');
+    thresh = prctile(ExGn(maskCircle), top_percent_thresh);
 
-    %m = imbinarize(ExGn, adapt_thresh) & maskCircle;
-
-    m= ExGn > thresh & maskCircle;
+    m = ExGn > thresh & maskCircle;
 
     m = m & maskCircle;
     se = strel('disk',6);

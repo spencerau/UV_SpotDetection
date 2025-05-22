@@ -7,7 +7,6 @@ function [bw] = FourierMask(img)
     % 2d Fourier 
     F = fftshift(fft2(double(cropGray)));
     mag = log(1 + abs(F));  
-    % imagesc(mag);
     %imshow(mag,[]);  % visualize frequency spectrum
 
     % radial band pass mask
@@ -26,11 +25,19 @@ function [bw] = FourierMask(img)
     Ffilt = F .* maskF;
     resp = real(ifft2(ifftshift(Ffilt)));
     
-    imagesc(resp);
-    % need to apply a super strict filter to get rid of wood patterns
-    bw = imbinarize(mat2gray(resp), 'adaptive');
-    imagesc(bw);
+    %imagesc(resp);
+    resp = mat2gray(resp);
+    % need to apply a strict filter to get rid of wood patterns
+    bw = resp > 0.7;
+
     bw = bw & maskCircle;
+    % zero out 200 pix border around to avoid circle
+    bw(1:200, :) = false;
+    bw(end-200+1:end, :) = false;
+    bw(:, 1:200) = false;
+    bw(:, end-200+1:end) = false;
+
+    %imagesc(bw);
 
 end
 

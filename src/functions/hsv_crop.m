@@ -1,5 +1,5 @@
 
-function [uv_region] = hsv_crop(img)
+function [uv_region, circle_mask] = hsv_crop(img)
     % convert to HSV so we can pull hue, saturation, brightness
     hsv_img = rgb2hsv(img);
     hue = hsv_img(:,:,1);
