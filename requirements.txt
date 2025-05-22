@@ -1,0 +1,15 @@
+torch>=2.0.0
+torchvision
+numpy
+opencv-python
+Pillow
+
+# YOLOv8
+ultralytics>=8.0.0
+
+# Segment Anything (Meta's model)
+git+https://github.com/facebookresearch/segment-anything.git
+
+# Optional: tqdm for progress, matplotlib for visualization
+tqdm
+matplotlib
