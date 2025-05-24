@@ -5,16 +5,16 @@ close all
 
 addpath(genpath(fullfile(pwd, 'src/functions')));
 
-%img = imread('assets/uv_1.jpg');
-img = imread('assets/uv_bedroom_2.jpg');
+img = imread('assets/uv_1.jpg');
+%img = imread('assets/uv_bedroom_2.jpg');
 
 function [] = detect_uv_spot(img, is_wood)
 
-    img = custom_resize(img, 1080);
+    img = custom_resize(img, 512);
     
     uv_region = hsv_crop(img);
     
-    exg_mask = ExcessGreenMask(uv_region, 90);
+    exg_mask = ExcessGreenMask(uv_region, 98);
     
     if ~is_wood
         % in the bedroom carpet only using RGB ExG is sufficient
@@ -24,9 +24,7 @@ function [] = detect_uv_spot(img, is_wood)
         subplot(1,3,3); imshow(exg_mask); title('Excess Green Mask');
     
     elseif is_wood
-    
-        fourier_mask = FourierMask(uv_region);
-        
+            
         grayscale = rgb2gray(uv_region);
         
         threshold = uv_threshold(grayscale);
@@ -34,6 +32,8 @@ function [] = detect_uv_spot(img, is_wood)
         spot_mask = woodgrain_filter(threshold);
         
         lineMask = line_mask(threshold);
+
+        fourier_mask = FourierMask(uv_region);
         
         combinedMask = spot_mask | lineMask | exg_mask | fourier_mask;
         
@@ -52,5 +52,5 @@ function [] = detect_uv_spot(img, is_wood)
     end
 end
 
-detect_uv_spot(img, false);
+detect_uv_spot(img, true);
 

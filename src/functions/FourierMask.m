@@ -1,4 +1,4 @@
-function [bw] = FourierMask(img)
+function [bw, resp] = FourierMask(img)
 
     maskCircle = any(img>0, 3);
     cropGray = double(rgb2gray(img));
@@ -32,10 +32,12 @@ function [bw] = FourierMask(img)
 
     bw = bw & maskCircle;
     % zero out 200 pix border around to avoid circle
-    bw(1:200, :) = false;
-    bw(end-200+1:end, :) = false;
-    bw(:, 1:200) = false;
-    bw(:, end-200+1:end) = false;
+    % TODO: SWAP THIS OUT FOR LIKE 10-20% of the input mask/image since its
+    % hardcoded
+    bw(1:100, :) = false;
+    bw(end-100+1:end, :) = false;
+    bw(:, 1:100) = false;
+    bw(:, end-100+1:end) = false;
 
     %imagesc(bw);
 
